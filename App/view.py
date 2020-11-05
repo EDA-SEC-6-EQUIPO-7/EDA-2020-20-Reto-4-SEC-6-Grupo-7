@@ -47,7 +47,59 @@ operación seleccionada.
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
-
+def printMenu():
+    print('----------------------------')
+    print('NAME RETO')
+    print('BIENVENID@')
+    print('1- Inicializar Analizador')
+    print('2- Cargar Dato')
+    print('3- (Req. 1)')
+    print('4- (Req. 2)')
+    print('5- (Req. 3)')
+    print('6- (Req. 4)')
+    print('7- (Req. 5)')
+    print('8- (Req. 6)')
+    print('9- (Req. 7)')
+    print('10- (Req. 8)')
+    print('0- Exit')
+    print('----------------------------')
 """
 Menu principal
 """
+while True:
+    printMenu():
+    inputs = input('Seleccione una opcion\n')
+
+    if int(inputs[0]) == 1:
+        pass
+
+    elif int(inputs[0]) == 2:
+        pass
+
+    elif int(inputs[0]) == 3:
+        pass
+
+    elif int(inputs[0]) == 4:
+        pass
+    
+    elif int(inputs[0]) == 5:
+        pass
+    
+    elif int(inputs[0]) == 6:
+        pass
+    
+    elif int(inputs[0]) == 7:
+        pass
+
+    elif int(inputs[0]) == 8:
+        pass
+    
+    elif int(inputs[0]) == 9:
+        pass
+
+    elif int(inputs[0]) == 10:
+        pass
+
+    else:
+        sys.exit(0)
+sys.exit(0)
