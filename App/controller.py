@@ -50,26 +50,37 @@ def newAnalyzer():
 #  de datos en los modelos
 # ___________________________________________________
 def loadFile(citibike, tripfile):
-
+    i = 0
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     for trip in input_file:
         model.addTrip(citibike, trip)
+        i+=1
+    citibike['size'] = i
     return citibike
 
-def loadTrips(citibike):
+def loadTrips(citibike, filename):
 
-    for filename in os.listdir(cf.data_dir):
-        if filename.endswith('.csv'):
-            print('Cargando archivo: ' + filename)
-            loadFile(citibike, filename)
-            print('No. de Vertices:',model.numVertices(citibike))
-            print('No. de Arcos:',model.numArcos(citibike))
-            print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))
+    #for filename in os.listdir(cf.data_dir):
+    #    if filename.endswith('.csv'):
+    print('Cargando archivo: ' + filename)
+    citibike = loadFile(citibike, filename)
+    print('No. viajes:',citibike['size'])
+    print('No. de Vertices:',model.numVertices(citibike))
+    print('No. de Arcos:',model.numArcos(citibike))
+    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))
     return citibike
 
 
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+
+def numCluster(citibike):
+    
+    return model.numSCC(citibike['stations'])
+
+def mismoCluster(citibike, id1, id2):
+
+    return model.sameCC(citibike['stations'], id1, id2)

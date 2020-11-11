@@ -89,18 +89,21 @@ def numSCC(graph):
     sc = scc.KosarajuSCC(graph)
     return scc.connectedComponents(sc)
 
-def sameCC(station1, station2):
-
+def sameCC(graph, station1, station2):
+    sc = scc.KosarajuSCC(graph)
     return scc.stronglyConnected(sc, station1, station2)
 
 def numVertices(analyzer):
    
     return gr.numVertices(analyzer['stations'])
 
-
 def numArcos(analyzer):
    
     return gr.numEdges(analyzer['stations'])
+
+def siseGraph(analyzer):
+
+    return m.size(analyzer['stations']['vertices'])
 # ==============================
 # Funciones Helper
 # ==============================

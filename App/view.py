@@ -42,8 +42,10 @@ operación seleccionada.
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
-
-
+filename = '201801-1-citibike-tripdata.csv'
+#filename = '201801-2-citibike-tripdata.csv'
+#filename = '201801-3-citibike-tripdata.csv'
+#filename = '201801-4-citibike-tripdata.csv'
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
@@ -53,7 +55,7 @@ def printMenu():
     print('BIENVENID@')
     print('1- Inicializar Analizador')
     print('2- Cargar Dato')
-    print('3- (Req. 1)')
+    print('3- Cantidad de Clusteres de viaje (Req. 1)')
     print('4- (Req. 2)')
     print('5- (Req. 3)')
     print('6- (Req. 4)')
@@ -66,6 +68,14 @@ def printMenu():
 """
 Menu principal
 """
+def option3():
+    id1 = input('Ingrese el id de la estacion 1:\n')
+    id2 = input('Ingrese el id de la estacion 2:\n')
+    cluster = controller.numCluster(citibike)
+    stations = controller.mismoCluster(citibike,id1,id2)
+    print('El numero de clusters en el grafo es:',cluster)
+    print('Las dos estaciones pertenecen al mismo cluster:',stations)
+
 while True:
     printMenu()
     inputs = input('Seleccione una opcion\n')
@@ -74,11 +84,11 @@ while True:
         citibike = controller.newAnalyzer()
 
     elif int(inputs[0]) == 2:
-        
-        citinike = controller.loadTrips(citibike)
+        citibike = controller.loadTrips(citibike,filename)
 
     elif int(inputs[0]) == 3:
-        pass
+        time = timeit.timeit(option3, number=1)
+        print('El tiempo de ejecucion es de:',time)
 
     elif int(inputs[0]) == 4:
         pass
