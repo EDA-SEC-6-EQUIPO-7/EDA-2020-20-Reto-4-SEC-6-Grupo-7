@@ -67,14 +67,15 @@ def printMenu():
 Menu principal
 """
 while True:
-    printMenu():
+    printMenu()
     inputs = input('Seleccione una opcion\n')
 
     if int(inputs[0]) == 1:
-        pass
+        citibike = controller.newAnalyzer()
 
     elif int(inputs[0]) == 2:
-        pass
+        
+        citinike = controller.loadTrips(citibike)
 
     elif int(inputs[0]) == 3:
         pass
