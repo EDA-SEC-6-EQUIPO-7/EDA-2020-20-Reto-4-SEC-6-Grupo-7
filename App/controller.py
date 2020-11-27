@@ -23,7 +23,6 @@
  * Dario Correal
  *
  """
-
 import config as cf
 from App import model
 from DISClib.DataStructures import linkedlistiterator as it
@@ -74,7 +73,6 @@ def loadFile(citibike, tripfile):
     return citibike
 
 def loadTrips(citibike, filename):
-
     #for filename in os.listdir(cf.data_dir):
     #    if filename.endswith('.csv'):
     print('Cargando archivo: ' + filename)
@@ -83,92 +81,10 @@ def loadTrips(citibike, filename):
     print('No. de Vertices:',model.numVertices(citibike))
     print('No. de Arcos:',model.numArcos(citibike))
     print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))
-    return citibike            
-
-def rutaPorResistencia(citibike, idS, t):
-    rutas = model.newList()
-    times = model.newList()
-    estaciones = model.newList()
-    busqueda = model.bfSearch(citibike,idS)
-    lst = busqueda['visited']['table']['elements']
-    for el in lst:
-        if el['key'] != None and el['value']['distTo']>1:
-            ti = 0
-            iterator = model.newIterator(model.pathto(busqueda, el['key']))
-            ruta = model.newList()
-            repetido =True
-            while model.hasNext(iterator) and ti <= t and repetido:
-                estacion = model.nextIterator(iterator)   
-                if estacion == idS:
-                    model.addLast(ruta,estacion)
-                elif estacion not in estaciones['elements']:
-                    model.addLast(estaciones, estacion)
-                    model.addLast(ruta, estacion)
-                else:
-                    repetido = False
-                if ruta['size'] >= 2:
-                    a = ruta['size']-1
-                    b = ruta['size']
-                    ti += model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
-            repetido = True
-            
-            if ti > t:
-                a = ruta['size']-1
-                b = ruta['size']
-                ti -= model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
-                model.deleteLast(ruta)
-
-            
-            if ruta['size']>1:
-                model.addLast(rutas, ruta)
-                model.addLast(times, ti)
-  
-    return rutas
-
-def estacionMasUsada(lst, edad):
-    max = 0
-    estacion = 'Ninguna'
-    listaEstaciones = lst['table']['elements']
-    for estacionId in listaEstaciones:
-        if listaEstaciones[estacionId][edad] > max:
-            estacion = estacionId
-    
-    return estacion
-
-def rangoEdad(anio):
-    return model.rangoEdad(anio)
-
-def caminoMasCorto(citibike, va, vb):
-
-    return model.djisktraCamino(citibike,va,vb)
-
-
-def print5(citibike, rutas):
-    j = 0
-    for ruta in rutas['elements']:
-        j+=1
-        print('Ruta', j)
-        i = 0
-        while i+1 < ruta['size']:
-            a = ruta['elements'][i]
-            b = ruta['elements'][i+1]
-            t = round(model.getDuration(citibike, a, b)/60,1)
-            print(a,'--->',b, ' : ', t)
-            i+=1
-def print6(lst):
-    iterator = model.newIterator(lst)
-
-    while model.hasNext(iterator):
-        segmento = model.nextIterator(iterator)
-        a = segmento['vertexA']
-        b = segmento['vertexB']
-        t = round(segmento['weight']/60,1)
-        print(a,'--->',b, ' : ', t)
-
+    return citibike         
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
-
 def numCluster(citibike):
     
     return model.numSCC(citibike['stations'])
@@ -181,6 +97,17 @@ def VertexList(citibike):
     
     return model.VertexList(citibike)
 
+def rangoEdad(anio):
+
+    return model.rangoEdad(anio)
+
+def caminoMasCorto(citibike, va, vb):
+
+    return model.djisktraCamino(citibike,va,vb)
+# ___________________________________________________
+#  Funciones de requerimeintos 
+# ___________________________________________________
+#  Requerimiento 3: Estaciones críticas
 def Top3(dct, MasUsada):
     if MasUsada==True:
         Station=None
@@ -227,7 +154,6 @@ def Top3(dct, MasUsada):
         min3[Station]=m3
         return min3
 
-
 def topSalida(citibike):
     dct={}
     lst=VertexList(citibike)
@@ -237,6 +163,7 @@ def topSalida(citibike):
         x=model.ArcosOut(citibike, str(j))
         dct[str(j)]=x
         j=it.next(iterador)
+
     return Top3(dct, True)
 
 def topEntrada(citibike):
@@ -248,6 +175,7 @@ def topEntrada(citibike):
         x=model.ArcosIn(citibike, str(j))
         dct[str(j)]=x
         j=it.next(iterador)
+
     return Top3(dct, True)
 
 def MenosUsado(citibike):
@@ -261,8 +189,63 @@ def MenosUsado(citibike):
         z=float(x)+float(y)
         dct[str(j)]=z
         j=it.next(iterador)
+
     return Top3(dct, False)
 
+
+#  Requerimiento 4: Ruta turística porresistencia
+def rutaPorResistencia(citibike, idS, t):
+    rutas = model.newList()
+    times = model.newList()
+    estaciones = model.newList()
+    busqueda = model.bfSearch(citibike,idS)
+    lst = busqueda['visited']['table']['elements']
+    for el in lst:
+        if el['key'] != None and el['value']['distTo']>1:
+            ti = 0
+            iterator = model.newIterator(model.pathto(busqueda, el['key']))
+            ruta = model.newList()
+            repetido =True
+            while model.hasNext(iterator) and ti <= t and repetido:
+                estacion = model.nextIterator(iterator)   
+                if estacion == idS:
+                    model.addLast(ruta,estacion)
+                elif estacion not in estaciones['elements']:
+                    model.addLast(estaciones, estacion)
+                    model.addLast(ruta, estacion)
+                else:
+                    repetido = False
+                if ruta['size'] >= 2:
+                    a = ruta['size']-1
+                    b = ruta['size']
+                    ti += model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+            repetido = True
+            
+            if ti > t:
+                a = ruta['size']-1
+                b = ruta['size']
+                ti -= model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+                model.deleteLast(ruta)
+
+            
+            if ruta['size']>1:
+                model.addLast(rutas, ruta)
+                model.addLast(times, ti)
+  
+    return rutas
+
+#REQ 5: Recomendador de Rutas
+def estacionMasUsada(lst, edad):
+    max = 0
+    estacion = 'Ninguna'
+    listaEstaciones = lst['table']['elements']
+    for estacionId in listaEstaciones:
+        if listaEstaciones[estacionId][edad] > max:
+            estacion = estacionId
+
+    return estacion
+
+#REQ 6: Recomendador de Rutas
 def distancia(lat1, long1, lat2, long2):
     if float(lat1)>float(lat2):
         a=(float(lat1)-float(lat2))**2
@@ -310,4 +293,39 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
         ruta=bfs.pathTo(search, stationL)
     a=(stationTname, stationLname, ruta)
     return a
+# ___________________________________________________
+#  Funciones de impresion
+# ___________________________________________________
+def print5(citibike, rutas):
+    j = 0
+    for ruta in rutas['elements']:
+        j+=1
+        print('Ruta', j)
+        i = 0
+        while i+1 < ruta['size']:
+            a = ruta['elements'][i]
+            b = ruta['elements'][i+1]
+            t = round(model.getDuration(citibike, a, b)/60,1)
+            print(a,'--->',b, ' : ', t)
+            i+=1
 
+def print4(Top3Entrada, Top3Salida, Top3MenosUsadas):
+    print('Las 3 estaciones a las que mas bicicletas llegan son ', Top3Entrada)
+    print('Las 3 estaciones de las que mas bicicletas salen son', Top3Salida)
+    print('Las 3 estaciones menos utilizadas son', Top3MenosUsadas)
+
+def print6(lst):
+    iterator = model.newIterator(lst)
+
+    while model.hasNext(iterator):
+        segmento = model.nextIterator(iterator)
+        a = segmento['vertexA']
+        b = segmento['vertexB']
+        t = round(segmento['weight']/60,1)
+        print(a,'--->',b, ' : ', t)
+
+def print7(requerimiento):
+    print("La estacion mas cercana al turista es: ",requerimiento[0])
+    print("La estacion mas cercana al sitio a visitar es: ",requerimiento[1])
+    print("La ruta a usar es: ",requerimiento[2])
+    #print("El tiempo estimado de dicha ruta es",tiempo)
