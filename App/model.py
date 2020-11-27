@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Algorithms.Graphs import bfs 
 from DISClib.Utils import error as error
 from DISClib.Algorithms.Graphs import scc
 assert config
@@ -47,14 +48,25 @@ de creacion y consulta sobre las estructuras de datos.
 def newAnalyzer():
 
     citibike = {
-                'stations':None
+                'stations':None,
+                'startStationAge':None,
+                'endStationAge':None,
+                'stations location':None
                 }
     
     citibike['stations'] = gr.newGraph(datastructure='ADJ_LIST',
-                                        directed=False,
+                                        directed=True,
                                         size=1000,
                                         comparefunction=comparestations)
     
+    citibike['startStationAge'] = m.newMap()
+    citibike['startStationAge']['table']['elements'] = {}
+
+    citibike['endStationAge'] = m.newMap()
+    citibike['endStationAge']['table']['elements'] = {}
+
+    citibike['stations location'] = m.newMap()#{}}
+   
     return citibike
 
 # Funciones para agregar informacion al grafo
@@ -81,6 +93,14 @@ def addTrip(citibike, trip):
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
 
+def addLocation(mapa, trip):
+    value = (trip['start station name'], trip['start station latitude'],trip['start station longitude'])
+    id = trip['start station id']
+    if m.contains(mapa,id):
+        pass
+    else:
+        mapa[id] = value
+
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -101,12 +121,108 @@ def numArcos(analyzer):
    
     return gr.numEdges(analyzer['stations'])
 
-def siseGraph(analyzer):
+def sizeGraph(analyzer):
 
     return m.size(analyzer['stations']['vertices'])
+
+def adjacents(analyzer, vertex):
+
+    return gr.adjacents(analyzer, vertex)
+
+def getDuration(graph, va, vb):
+    
+    return gr.getEdge(graph,va, vb)['weight']
+
+def vertices(analyzer):
+
+    return gr.vertices(analyzer)
+
+def isPresent(lst, elm):
+
+    return lt.isPresent(lst,elm)
+
+def addLast(lst, elm):
+
+    return lt.addLast(lst, elm)
+
+def bfSearch(graph, vertice):
+
+    return bfs.BreadhtFisrtSearch(graph, vertice)
+
+def pathto(search, vertice):
+
+    return bfs.pathTo(search, vertice)
 # ==============================
 # Funciones Helper
 # ==============================
+def newList():
+
+    return lt.newList('ARRAY_LIST')
+
+def getElement(lst, pos):
+
+    return lt.getElement(lst, pos)
+
+def deleteLast(lst):
+
+    return lt.removeLast(lst)
+
+def deleteFirst(lst):
+
+    return lt.removeFirst(lst)
+
+def edad(anio):
+
+    return 2020-anio
+
+def rangoEdad(anio):
+    age = edad(anio) 
+    if age >= 0 and age <= 10:
+        return '0-10'
+    elif age >= 11 and age <= 20:
+        return '11-20'
+    elif age >= 21 and age <= 30:
+        return '21-30'
+    elif age >= 31 and age <= 40:
+        return '31-40'
+    elif age >= 41 and age <= 50:
+        return '41-50'
+    elif age >= 51 and age <= 60:
+        return '51-60'
+    else:
+        return '+60'
+    
+def getMap(mapa, key):
+
+    return mapa['table']['elements'][key]
+
+
+
+def putMap(mapa, key):
+    value = {'0-10':0,
+            '11-20':0,
+            '21-30':0,
+            '31-40':0,
+            '41-50':0,
+            '51-60':0,
+            '+60':0
+            }
+    
+    if key not in mapa['table']['elements']:
+        mapa['table']['elements'][key] = value
+
+def addAge(mapa, key, edad):
+
+    getMap(mapa, key)[edad] += 1
+    
+def djisktraCamino(graph, va, vb):
+    search = djk.Dijkstra(graph, va)
+    if djk.hasPathTo(search, vb):
+
+        return djk.pathTo(search, vb)
+    else:
+        return 'no hay camino'
+    
 
 # ==============================
 # Funciones de Comparacion
@@ -121,3 +237,19 @@ def comparestations(station, keyvaluestation):
         return 1
     else:
         return -1
+
+# ==============================
+# Funciones de iteracion
+# ==============================
+
+def newIterator(lst):
+
+    return it.newIterator(lst)
+
+def hasNext(iterator):
+
+    return it.hasNext(iterator)
+
+def nextIterator(iterator):
+
+    return it.next(iterator)
