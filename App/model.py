@@ -35,7 +35,6 @@ from DISClib.Utils import error as error
 from DISClib.Algorithms.Graphs import scc
 assert config
 
-
 """
 En este archivo definimos los TADs que vamos a usar y las operaciones
 de creacion y consulta sobre las estructuras de datos.
@@ -59,14 +58,11 @@ def newAnalyzer():
                                         size=1000,
                                         comparefunction=comparestations)
     
-    citibike['startStationAge'] = m.newMap()
-    citibike['startStationAge']['table']['elements'] = {}
+    citibike['startStationAge'] = newMap()
+    
+    citibike['endStationAge'] = newMap()
 
-    citibike['endStationAge'] = m.newMap()
-    citibike['endStationAge']['table']['elements'] = {}
-
-    citibike['stations location'] = m.newMap()#{}}
-    citibike['stations location']['table']['elements'] = {}
+    citibike['stations location'] = newMap()
     
     return citibike
 
@@ -90,6 +86,14 @@ def addTrip(citibike, trip):
     origin = trip['start station id']
     destination = trip['end station id']
     duration = int(trip['tripduration'])
+    anio = int(trip['birth year'])
+    rangoAge = rangoEdad(anio)
+    putMap(citibike['startStationAge'],origin)
+    putMap(citibike['endStationAge'],destination)
+    addAge(citibike['startStationAge'],origin, rangoAge)
+    addAge(citibike['endStationAge'],destination,rangoAge)
+    addLocation(citibike['stations location'],trip)
+    addLocation(citibike['stations location'],trip)
     addStation(citibike, origin)
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
@@ -108,7 +112,6 @@ def addLocation(mapa, trip):
         pass
     else:
         mapa['table']['elements'][ids2] = value
-
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -133,6 +136,12 @@ def sizeGraph(analyzer):
 
     return m.size(analyzer['stations']['vertices'])
 
+def newMap():
+
+    mapa = m.newMap()
+    mapa['table']['elements'] = {}
+    return mapa 
+
 def VertexList(analyzer):
 
     return gr.vertices(analyzer['stations'])
@@ -145,17 +154,31 @@ def ArcosIn(analyzer, vertex):
 
     return gr.indegree(analyzer['stations'], vertex)
     
+def isPresent(lst, elm):
 
-# ==============================
-# Funciones Helper
-# ==============================
-def newList():
+    return lt.isPresent(lst,elm)
 
-    return lt.newList('ARRAY_LIST')
+def getDuration(graph, va, vb):
+    
+    return gr.getEdge(graph,va, vb)['weight']
 
 def getElement(lst, pos):
 
     return lt.getElement(lst, pos)
+
+def djisktraCamino(graph, va, vb):
+    search = djk.Dijkstra(graph, va)
+    if djk.hasPathTo(search, vb):
+
+        return djk.pathTo(search, vb)
+    else:
+        return 'no hay camino'
+# ==============================
+# TAD
+# ==============================
+def newList():
+
+    return lt.newList('ARRAY_LIST')
 
 def deleteLast(lst):
 
@@ -164,7 +187,49 @@ def deleteLast(lst):
 def deleteFirst(lst):
 
     return lt.removeFirst(lst)
+    
+def getMap(mapa, key):
 
+    return mapa['table']['elements'][key]
+
+def bfSearch(graph, vertice):
+
+    return bfs.BreadhtFisrtSearch(graph, vertice)
+
+def pathto(search, vertice):
+
+    return bfs.pathTo(search, vertice)
+
+def addLast(lst, elm):
+
+    return lt.addLast(lst, elm)
+
+def isNotNone(el):
+
+    return el['key'] != None
+
+def getList(busqueda):
+
+    return busqueda['visited']['table']['elements']
+
+def getDistance(el):
+
+    return el['value']['distTo']
+
+def getKey(el):
+
+    return el['key']
+
+def getSize(lst):
+
+    return lst['size']
+
+def getListmap(lst):
+
+    return lst['table']['elements']
+# ==============================
+# Funciones Helper
+# ==============================
 def edad(anio):
 
     return 2020-anio
@@ -185,18 +250,6 @@ def rangoEdad(anio):
         return '51-60'
     else:
         return '+60'
-    
-def getMap(mapa, key):
-
-    return mapa['table']['elements'][key]
-
-def bfSearch(graph, vertice):
-
-    return bfs.BreadhtFisrtSearch(graph, vertice)
-
-def pathto(search, vertice):
-
-    return bfs.pathTo(search, vertice)
 
 def putMap(mapa, key):
     value = {'0-10':0,
@@ -207,37 +260,17 @@ def putMap(mapa, key):
             '51-60':0,
             '+60':0
             }
-    
+
     if key not in mapa['table']['elements']:
         mapa['table']['elements'][key] = value
 
 def addAge(mapa, key, edad):
 
     getMap(mapa, key)[edad] += 1
-    
-def djisktraCamino(graph, va, vb):
-    search = djk.Dijkstra(graph, va)
-    if djk.hasPathTo(search, vb):
 
-        return djk.pathTo(search, vb)
-    else:
-        return 'no hay camino'
-    
-def isPresent(lst, elm):
-
-    return lt.isPresent(lst,elm)
-
-def addLast(lst, elm):
-
-    return lt.addLast(lst, elm)
-
-def getDuration(graph, va, vb):
-    
-    return gr.getEdge(graph,va, vb)['weight']
 # ==============================
 # Funciones de Comparacion
-# ==============================
-
+# =============================
 def comparestations(station, keyvaluestation):
 
     code = keyvaluestation['key']

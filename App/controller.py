@@ -57,16 +57,7 @@ def loadFile(citibike, tripfile):
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     for trip in input_file:
-        origin = trip['start station id']
-        destination = trip['end station id']
-        anio = int(trip['birth year'])
-        rangoEdad = model.rangoEdad(anio)
-        model.putMap(citibike['startStationAge'],origin)
-        model.putMap(citibike['endStationAge'],destination)
-        model.addAge(citibike['startStationAge'],origin, rangoEdad)
-        model.addAge(citibike['endStationAge'],destination,rangoEdad)
-        model.addLocation(citibike['stations location'],trip)
-        model.addLocation(citibike['stations location'],trip)
+        
         model.addTrip(citibike, trip)
         i+=1
     citibike['size'] = i
@@ -199,11 +190,11 @@ def rutaPorResistencia(citibike, idS, t):
     times = model.newList()
     estaciones = model.newList()
     busqueda = model.bfSearch(citibike,idS)
-    lst = busqueda['visited']['table']['elements']
+    lst = model.getList(busqueda)
     for el in lst:
-        if el['key'] != None and el['value']['distTo']>1:
+        if model.isNotNone(el) and model.getDistance(el)>1:
             ti = 0
-            iterator = model.newIterator(model.pathto(busqueda, el['key']))
+            iterator = model.newIterator(model.pathto(busqueda, model.getKey(el)))
             ruta = model.newList()
             repetido =True
             while model.hasNext(iterator) and ti <= t and repetido:
@@ -215,30 +206,31 @@ def rutaPorResistencia(citibike, idS, t):
                     model.addLast(ruta, estacion)
                 else:
                     repetido = False
-                if ruta['size'] >= 2:
-                    a = ruta['size']-1
-                    b = ruta['size']
+                if model.getSize(ruta) >= 2:
+                    a = model.getSize(ruta)-1
+                    b = model.getSize(ruta)
                     ti += model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+        
             repetido = True
             
-            if ti > t:
-                a = ruta['size']-1
-                b = ruta['size']
-                ti -= model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+            if ti > t and model.getSize(ruta)>=2:
                 model.deleteLast(ruta)
-
-            
-            if ruta['size']>1:
+                model.deleteLast(estaciones)
+                a = model.getSize(ruta)-1
+                b = model.getSize(ruta)
+                ti -= model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+           
+            if model.getSize(ruta)>1:
                 model.addLast(rutas, ruta)
                 model.addLast(times, ti)
-  
+
     return rutas
 
 #REQ 5: Recomendador de Rutas
 def estacionMasUsada(lst, edad):
     max = 0
     estacion = 'Ninguna'
-    listaEstaciones = lst['table']['elements']
+    listaEstaciones = model.getListmap(lst)
     for estacionId in listaEstaciones:
         if listaEstaciones[estacionId][edad] > max:
             estacion = estacionId
@@ -289,6 +281,7 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
         j=it.next(iterador)
 
     search=  bfs.BreadhtFisrtSearch(citibike['stations'], stationT)
+
     if bfs.hasPathTo(search, stationL):
         ruta=bfs.pathTo(search, stationL)
     a=(stationTname, stationLname, ruta)
@@ -296,6 +289,11 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
 # ___________________________________________________
 #  Funciones de impresion
 # ___________________________________________________
+def print4(Top3Entrada, Top3Salida, Top3MenosUsadas):
+    print('Las 3 estaciones a las que mas bicicletas llegan son ', Top3Entrada)
+    print('Las 3 estaciones de las que mas bicicletas salen son', Top3Salida)
+    print('Las 3 estaciones menos utilizadas son', Top3MenosUsadas)
+
 def print5(citibike, rutas):
     j = 0
     for ruta in rutas['elements']:
@@ -308,11 +306,6 @@ def print5(citibike, rutas):
             t = round(model.getDuration(citibike, a, b)/60,1)
             print(a,'--->',b, ' : ', t)
             i+=1
-
-def print4(Top3Entrada, Top3Salida, Top3MenosUsadas):
-    print('Las 3 estaciones a las que mas bicicletas llegan son ', Top3Entrada)
-    print('Las 3 estaciones de las que mas bicicletas salen son', Top3Salida)
-    print('Las 3 estaciones menos utilizadas son', Top3MenosUsadas)
 
 def print6(lst):
     iterator = model.newIterator(lst)
