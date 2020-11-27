@@ -125,33 +125,19 @@ def sizeGraph(analyzer):
 
     return m.size(analyzer['stations']['vertices'])
 
-def adjacents(analyzer, vertex):
+def VertexList(analyzer):
 
-    return gr.adjacents(analyzer, vertex)
+    return gr.vertices(analyzer['stations'])
 
-def getDuration(graph, va, vb):
+def ArcosOut(analyzer, vertex):
+
+    return gr.outdegree(analyzer['stations'], vertex)
     
-    return gr.getEdge(graph,va, vb)['weight']
+def ArcosIn(analyzer, vertex):
 
-def vertices(analyzer):
+    return gr.indegree(analyzer['stations'], vertex)
+    
 
-    return gr.vertices(analyzer)
-
-def isPresent(lst, elm):
-
-    return lt.isPresent(lst,elm)
-
-def addLast(lst, elm):
-
-    return lt.addLast(lst, elm)
-
-def bfSearch(graph, vertice):
-
-    return bfs.BreadhtFisrtSearch(graph, vertice)
-
-def pathto(search, vertice):
-
-    return bfs.pathTo(search, vertice)
 # ==============================
 # Funciones Helper
 # ==============================
