@@ -142,8 +142,6 @@ def caminoMasCorto(citibike, va, vb):
     return model.djisktraCamino(citibike,va,vb)
 
 
-
-
 def print6(citibike, rutas):
     j = 0
     for ruta in rutas['elements']:
