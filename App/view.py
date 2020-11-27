@@ -57,12 +57,10 @@ def printMenu():
     print('1- Inicializar Analizador')
     print('2- Cargar Dato')
     print('3- Cantidad de Clusteres de viaje (Req. 1)')
-    print('5- (Req. 3)')
-    print('6- Ruta turística por resistencia (Req. 4)')
-    print('7- Recomendador de Rutas (Req. 5)')
-    print('8- Ruta de interés turístico (Req. 6)')
-    print('9- (Req. 7)')
-    print('10- (Req. 8)')
+    print('4- Estaciones críticas (Req. 3)')
+    print('5- Ruta turística por resistencia (Req. 4)')
+    print('6- Recomendador de Rutas (Req. 5)')
+    print('7- Ruta de interés turístico (Req. 6)')
     print('0- Exit')
     print('----------------------------')
 """
@@ -76,12 +74,7 @@ def option3():
     print('El numero de clusters en el grafo es:',cluster)
     print('Las dos estaciones pertenecen al mismo cluster:',stations)
 
-def option6():
-    idStation = input('Ingrese el id de la estacion de inicio:\n')
-    tmax = int(input('Ingrese el tiempo maximo que desea montar (en minutos):\n'))*60
-    rutas = controller.rutaPorResistencia(citibike['stations'],idStation,tmax)
-    controller.print6(citibike['stations'],rutas)  
-def option5():
+def option4():
     Top3Entrada=controller.topEntrada(citibike)
     Top3Salida=controller.topSalida(citibike)
     Top3MenosUsadas=controller.MenosUsado(citibike)
@@ -89,7 +82,23 @@ def option5():
     print('Las 3 estaciones de las que mas bicicletas salen son', Top3Salida)
     print('Las 3 estaciones menos utilizadas son', Top3MenosUsadas)
 
-def option8():
+def option5():
+    idStation = input('Ingrese el id de la estacion de inicio:\n')
+    tmax = int(input('Ingrese el tiempo maximo que desea montar (en minutos):\n'))*60
+    rutas = controller.rutaPorResistencia(citibike['stations'],idStation,tmax)
+    controller.print5(citibike['stations'],rutas)  
+
+def option6():
+    anioNacimiento = int(input('Ingrese su año de nacimiento: \n'))
+    edad = controller.rangoEdad(anioNacimiento)
+    origin = controller.estacionMasUsada(citibike['startStationAge'],edad)
+    print('Estacion inicial:',origin)
+    destination = controller.estacionMasUsada(citibike['endStationAge'],edad)
+    print('Estacion final',destination)
+    path = controller.caminoMasCorto(citibike['stations'],origin,destination)
+    controller.print6(path)
+
+def option7():
     latT=input("Ingrese la latitud del turista: ")
     longT=input("Ingrese la longitud del turista: ")
     latL=input("Ingrese la latitud del sitio a visitar: ")
@@ -112,40 +121,25 @@ while True:
         
         citibike = controller.loadTrips(citibike,filename)
         
-    elif int(inputs[0]) == 3:
+    elif int(inputs[0]) == 3: #REQ 1
         time = timeit.timeit(option3, number=1)
         print('El tiempo de ejecucion es de:',time)
 
-    elif int(inputs[0]) == 4:
-        pass
+    elif int(inputs[0]) == 4: #REQ 3
+        time = timeit.timeit(option4, number=1)
+        print('El tiempo de ejecucion es de:',time)
     
-    elif int(inputs[0]) == 5:
+    elif int(inputs[0]) == 5: #REQ 4
         time = timeit.timeit(option5, number=1)
         print('El tiempo de ejecucion es de:',time)
     
-    elif int(inputs[0]) == 6: #REQ 4
-
-        option6()
-    
-    elif int(inputs[0]) == 7:
-        anioNacimiento = int(input('Ingrese su año de nacimiento: \n'))
-        edad = controller.rangoEdad(anioNacimiento)
-        origin = controller.estacionMasUsada(citibike['startStationAge'],edad)
-        print('Estacion inicial:',origin)
-        destination = controller.estacionMasUsada(citibike['endStationAge'],edad)
-        print('Estacion final',destination)
-        path = controller.caminoMasCorto(citibike['stations'],origin,destination)
-        controller.print7(path)
-
-    elif int(inputs[0]) == 8:
-        time = timeit.timeit(option8, number=1)
+    elif int(inputs[0]) == 6: #REQ 5
+        time = timeit.timeit(option6, number=1)
         print('El tiempo de ejecucion es de:',time)
     
-    elif int(inputs[0]) == 9:
-        pass
-
-    elif int(inputs[0]) == 10:
-        pass
+    elif int(inputs[0]) == 7: #REQ 6
+        time = timeit.timeit(option7, number=1)
+        print('El tiempo de ejecucion es de:',time)
 
     else:
         sys.exit(0)

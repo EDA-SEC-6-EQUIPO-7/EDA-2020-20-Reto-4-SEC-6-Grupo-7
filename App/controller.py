@@ -67,6 +67,7 @@ def loadFile(citibike, tripfile):
         model.addAge(citibike['startStationAge'],origin, rangoEdad)
         model.addAge(citibike['endStationAge'],destination,rangoEdad)
         model.addLocation(citibike['stations location'],trip)
+        model.addLocation(citibike['stations location'],trip)
         model.addTrip(citibike, trip)
         i+=1
     citibike['size'] = i
@@ -142,7 +143,7 @@ def caminoMasCorto(citibike, va, vb):
     return model.djisktraCamino(citibike,va,vb)
 
 
-def print6(citibike, rutas):
+def print5(citibike, rutas):
     j = 0
     for ruta in rutas['elements']:
         j+=1
@@ -154,7 +155,7 @@ def print6(citibike, rutas):
             t = round(model.getDuration(citibike, a, b)/60,1)
             print(a,'--->',b, ' : ', t)
             i+=1
-def print7(lst):
+def print6(lst):
     iterator = model.newIterator(lst)
 
     while model.hasNext(iterator):
@@ -257,19 +258,19 @@ def MenosUsado(citibike):
     while it.hasNext(iterador):
         x=model.ArcosOut(citibike, str(j))
         y=model.ArcosIn(citibike, str(j))
-        z=int(x)+int(y)
+        z=float(x)+float(y)
         dct[str(j)]=z
         j=it.next(iterador)
     return Top3(dct, False)
 
 def distancia(lat1, long1, lat2, long2):
-    if int(lat1)>int(lat2):
-        a=(int(lat1)-int(lat2))**2
-        b=(int(long1)-int(long2))**2
+    if float(lat1)>float(lat2):
+        a=(float(lat1)-float(lat2))**2
+        b=(float(long1)-float(long2))**2
         distancia=(a+b)**(1/2)
     else:
-        a=(int(lat2)-int(lat1))**2
-        b=(int(long2)-int(long1))**2
+        a=(float(lat2)-float(lat1))**2
+        b=(float(long2)-float(long1))**2
         distancia=(a+b)**(1/2)
     return distancia
 
@@ -280,11 +281,12 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
     dL=None
     stationL=None
     stationLname=None
+    ruta =None
     lst=VertexList(citibike)
     iterador=it.newIterator(lst)
     j=it.next(iterador)
     while it.hasNext(iterador):
-        x=h.get(tabla, j)
+        x=tabla['table']['elements'][j]
         if dT==None:
             dT=distancia(latT, longT, x[1], x[1])
             stationT=j
@@ -303,7 +305,7 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
             stationLname=x[0]
         j=it.next(iterador)
 
-    search= bfs.BreadhtFisrtSearch(citibike, stationT)
+    search=  bfs.BreadhtFisrtSearch(citibike['stations'], stationT)
     if bfs.hasPathTo(search, stationL):
         ruta=bfs.pathTo(search, stationL)
     a=(stationTname, stationLname, ruta)

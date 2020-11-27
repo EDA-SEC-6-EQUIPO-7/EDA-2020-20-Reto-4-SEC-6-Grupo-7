@@ -66,7 +66,8 @@ def newAnalyzer():
     citibike['endStationAge']['table']['elements'] = {}
 
     citibike['stations location'] = m.newMap()#{}}
-   
+    citibike['stations location']['table']['elements'] = {}
+    
     return citibike
 
 # Funciones para agregar informacion al grafo
@@ -95,11 +96,18 @@ def addTrip(citibike, trip):
 
 def addLocation(mapa, trip):
     value = (trip['start station name'], trip['start station latitude'],trip['start station longitude'])
-    id = trip['start station id']
-    if m.contains(mapa,id):
+    value2 = (trip['end station name'], trip['end station latitude'],trip['end station longitude'])
+    ids = trip['start station id']
+    ids2 = trip['end station id']
+    if ids in mapa['table']['elements']:
         pass
     else:
-        mapa[id] = value
+        mapa['table']['elements'][ids] = value
+    
+    if ids2 in mapa['table']['elements']:
+        pass
+    else:
+        mapa['table']['elements'][ids2] = value
 
 # ==============================
 # Funciones de consulta
@@ -182,7 +190,13 @@ def getMap(mapa, key):
 
     return mapa['table']['elements'][key]
 
+def bfSearch(graph, vertice):
 
+    return bfs.BreadhtFisrtSearch(graph, vertice)
+
+def pathto(search, vertice):
+
+    return bfs.pathTo(search, vertice)
 
 def putMap(mapa, key):
     value = {'0-10':0,
@@ -209,7 +223,17 @@ def djisktraCamino(graph, va, vb):
     else:
         return 'no hay camino'
     
+def isPresent(lst, elm):
 
+    return lt.isPresent(lst,elm)
+
+def addLast(lst, elm):
+
+    return lt.addLast(lst, elm)
+
+def getDuration(graph, va, vb):
+    
+    return gr.getEdge(graph,va, vb)['weight']
 # ==============================
 # Funciones de Comparacion
 # ==============================
