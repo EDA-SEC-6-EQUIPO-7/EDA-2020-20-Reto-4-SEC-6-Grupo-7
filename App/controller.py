@@ -58,6 +58,15 @@ def loadFile(citibike, tripfile):
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     for trip in input_file:
+        origin = trip['start station id']
+        destination = trip['end station id']
+        anio = int(trip['birth year'])
+        rangoEdad = model.rangoEdad(anio)
+        model.putMap(citibike['startStationAge'],origin)
+        model.putMap(citibike['endStationAge'],destination)
+        model.addAge(citibike['startStationAge'],origin, rangoEdad)
+        model.addAge(citibike['endStationAge'],destination,rangoEdad)
+        model.addLocation(citibike['stations location'],trip)
         model.addTrip(citibike, trip)
         i+=1
     citibike['size'] = i
@@ -72,9 +81,88 @@ def loadTrips(citibike, filename):
     print('No. viajes:',citibike['size'])
     print('No. de Vertices:',model.numVertices(citibike))
     print('No. de Arcos:',model.numArcos(citibike))
-    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))
-    return citibike
+    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))s
+    return citibike            
 
+def rutaPorResistencia(citibike, idS, t):
+    rutas = model.newList()
+    times = model.newList()
+    estaciones = model.newList()
+    busqueda = model.bfSearch(citibike,idS)
+    lst = busqueda['visited']['table']['elements']
+    for el in lst:
+        if el['key'] != None and el['value']['distTo']>1:
+            ti = 0
+            iterator = model.newIterator(model.pathto(busqueda, el['key']))
+            ruta = model.newList()
+            repetido =True
+            while model.hasNext(iterator) and ti <= t and repetido:
+                estacion = model.nextIterator(iterator)   
+                if estacion == idS:
+                    model.addLast(ruta,estacion)
+                elif estacion not in estaciones['elements']:
+                    model.addLast(estaciones, estacion)
+                    model.addLast(ruta, estacion)
+                else:
+                    repetido = False
+                if ruta['size'] >= 2:
+                    a = ruta['size']-1
+                    b = ruta['size']
+                    ti += model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+            repetido = True
+            
+            if ti > t:
+                a = ruta['size']-1
+                b = ruta['size']
+                ti -= model.getDuration(citibike,model.getElement(ruta, a),model.getElement(ruta, b))
+                model.deleteLast(ruta)
+
+            
+            if ruta['size']>1:
+                model.addLast(rutas, ruta)
+                model.addLast(times, ti)
+  
+    return rutas
+
+def estacionMasUsada(lst, edad):
+    max = 0
+    estacion = 'Ninguna'
+    listaEstaciones = lst['table']['elements']
+    for estacionId in listaEstaciones:
+        if listaEstaciones[estacionId][edad] > max:
+            estacion = estacionId
+    
+    return estacion
+
+def rangoEdad(anio):
+    return model.rangoEdad(anio)
+
+def caminoMasCorto(citibike, va, vb):
+
+    return model.djisktraCamino(citibike,va,vb)
+
+
+def print6(citibike, rutas):
+    j = 0
+    for ruta in rutas['elements']:
+        j+=1
+        print('Ruta', j)
+        i = 0
+        while i+1 < ruta['size']:
+            a = ruta['elements'][i]
+            b = ruta['elements'][i+1]
+            t = round(model.getDuration(citibike, a, b)/60,1)
+            print(a,'--->',b, ' : ', t)
+            i+=1
+def print7(lst):
+    iterator = model.newIterator(lst)
+
+    while model.hasNext(iterator):
+        segmento = model.nextIterator(iterator)
+        a = segmento['vertexA']
+        b = segmento['vertexB']
+        t = round(segmento['weight']/60,1)
+        print(a,'--->',b, ' : ', t)
 
 # ___________________________________________________
 #  Funciones para consultas
