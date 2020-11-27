@@ -216,8 +216,8 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
         j=it.next(iterador)
 
     search= bfs.BreadhtFisrtSearch(citibike, stationT)
-        if bfs.hasPathTo(search, stationL):
-            ruta=bfs.pathTo(search, stationL)
+    if bfs.hasPathTo(search, stationL):
+        ruta=bfs.pathTo(search, stationL)
     a=(stationTname, stationLname, ruta)
     return a
 
