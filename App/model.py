@@ -104,6 +104,20 @@ def numArcos(analyzer):
 def siseGraph(analyzer):
 
     return m.size(analyzer['stations']['vertices'])
+
+def VertexList(analyzer):
+
+    return gr.vertices(analyzer['stations'])
+
+def ArcosOut(analyzer, vertex):
+
+    return gr.outdegree(analyzer['stations'], vertex)
+    
+def ArcosIn(analyzer, vertex):
+
+    return gr.indegree(analyzer['stations'], vertex)
+    
+
 # ==============================
 # Funciones Helper
 # ==============================

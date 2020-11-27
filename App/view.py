@@ -28,6 +28,7 @@
 import sys
 import config
 from App import controller
+from App import model
 from DISClib.ADT import stack
 import timeit
 assert config
@@ -76,6 +77,25 @@ def option3():
     print('El numero de clusters en el grafo es:',cluster)
     print('Las dos estaciones pertenecen al mismo cluster:',stations)
 
+def option5():
+    Top3Entrada=controller.topEntrada(citibike)
+    Top3Salida=controller.topSalida(citibike)
+    Top3MenosUsadas=controller.MenosUsado(citibike)
+    print('Las 3 estaciones a las que mas bicicletas llegan son ', Top3Entrada)
+    print('Las 3 estaciones de las que mas bicicletas salen son', Top3Salida)
+    print('Las 3 estaciones menos utilizadas son', Top3MenosUsadas)
+
+def option8():
+    latT=input("Ingrese la latitud del turista: ")
+    longT=input("Ingrese la longitud del turista: ")
+    latL=input("Ingrese la latitud del sitio a visitar: ")
+    longL=input("Ingrese la longitud del sitio a visitar: ")
+    requerimiento=controller.RutaTuristica(citibike, tabla, latT, longT, latL, longL)
+    print("La estacion mas cercana al turista es: ",requerimiento[0])
+    print("La estacion mas cercana al sitio a visitar es: ",requerimiento[1])
+    print("La ruta a usar es: ",requerimiento[2])
+    #print("El tiempo estimado de dicha ruta es",tiempo)
+
 while True:
     printMenu()
     inputs = input('Seleccione una opcion\n')
@@ -94,7 +114,8 @@ while True:
         pass
     
     elif int(inputs[0]) == 5:
-        pass
+        time = timeit.timeit(option5, number=1)
+        print('El tiempo de ejecucion es de:',time)
     
     elif int(inputs[0]) == 6:
         pass
@@ -103,7 +124,8 @@ while True:
         pass
 
     elif int(inputs[0]) == 8:
-        pass
+        time = timeit.timeit(option8, number=1)
+        print('El tiempo de ejecucion es de:',time)
     
     elif int(inputs[0]) == 9:
         pass
