@@ -81,7 +81,7 @@ def loadTrips(citibike, filename):
     print('No. viajes:',citibike['size'])
     print('No. de Vertices:',model.numVertices(citibike))
     print('No. de Arcos:',model.numArcos(citibike))
-    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))s
+    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))
     return citibike            
 
 def rutaPorResistencia(citibike, idS, t):

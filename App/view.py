@@ -110,7 +110,6 @@ while True:
     elif int(inputs[0]) == 2:
         
         citibike = controller.loadTrips(citibike,filename)
-        print(citibike['stations location'])
         
     elif int(inputs[0]) == 3:
         time = timeit.timeit(option3, number=1)
