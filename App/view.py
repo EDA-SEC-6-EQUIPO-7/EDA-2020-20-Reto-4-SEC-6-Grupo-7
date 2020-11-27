@@ -94,6 +94,7 @@ def option8():
     longT=input("Ingrese la longitud del turista: ")
     latL=input("Ingrese la latitud del sitio a visitar: ")
     longL=input("Ingrese la longitud del sitio a visitar: ")
+    tabla=citibike['stations location']
     requerimiento=controller.RutaTuristica(citibike, tabla, latT, longT, latL, longL)
     print("La estacion mas cercana al turista es: ",requerimiento[0])
     print("La estacion mas cercana al sitio a visitar es: ",requerimiento[1])

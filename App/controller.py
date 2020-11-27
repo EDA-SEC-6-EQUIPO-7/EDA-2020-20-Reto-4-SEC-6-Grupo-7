@@ -286,21 +286,21 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
     while it.hasNext(iterador):
         x=h.get(tabla, j)
         if dT==None:
-            dT=distancia(latT, longT, x[0], x[1])
+            dT=distancia(latT, longT, x[1], x[1])
             stationT=j
-            stationTname=x[2]
-        elif distancia(latT, longT, x[0], x[1])<dT:
-            dT=distancia(latT, longT, x[0], x[1])
+            stationTname=x[0]
+        elif distancia(latT, longT, x[1], x[2])<dT:
+            dT=distancia(latT, longT, x[1], x[2])
             stationT=j
-            stationTname=x[2]
+            stationTname=x[0]
         if dL==None:
-            dL=distancia(latL, longL, x[0], x[1])
+            dL=distancia(latL, longL, x[1], x[2])
             stationL=j
-            stationLname=x[2]
-        elif distancia(latL, longL, x[0], x[1])<dL:
-            dL=distancia(latL, longL, x[0], x[1])
+            stationLname=x[0]
+        elif distancia(latL, longL, x[1], x[2])<dL:
+            dL=distancia(latL, longL, x[1], x[2])
             stationL=j
-            stationLname=x[2]
+            stationLname=x[0]
         j=it.next(iterador)
 
     search= bfs.BreadhtFisrtSearch(citibike, stationT)
