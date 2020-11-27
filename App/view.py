@@ -110,8 +110,8 @@ while True:
     elif int(inputs[0]) == 2:
         
         citibike = controller.loadTrips(citibike,filename)
-        #controller.test(citibike['stations'])
         print(citibike['stations location'])
+        
     elif int(inputs[0]) == 3:
         time = timeit.timeit(option3, number=1)
         print('El tiempo de ejecucion es de:',time)

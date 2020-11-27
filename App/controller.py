@@ -81,10 +81,7 @@ def loadTrips(citibike, filename):
     print('No. viajes:',citibike['size'])
     print('No. de Vertices:',model.numVertices(citibike))
     print('No. de Arcos:',model.numArcos(citibike))
-    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))
-    #print(type(model.bfSearch(citibike['stations'],'72')['visited']['table']['elements']))
-    #print(type(model.adjacents(citibike['stations'],'72')))
-    
+    print('No de componentes fuertemente conectados:',model.numSCC(citibike['stations']))s
     return citibike            
 
 def rutaPorResistencia(citibike, idS, t):
@@ -179,55 +176,6 @@ def mismoCluster(citibike, id1, id2):
 
     return model.sameCC(citibike['stations'], id1, id2)
 
-def test2(grf):
-    print(model.getDuration(grf,'72','3533'))
-
-def test(grf):
-    rutas = model.newList()
-    busqueda = model.bfSearch(grf,'72')
-    lst = busqueda['visited']['table']['elements']
-    for el in lst:
-        
-        if el['key'] != None:
-            print('-----------------------')
-            print(el)
-            ti = 0
-            iterator = model.newIterator(model.pathto(busqueda, el['key']))
-            ruta = model.newList()
-            while model.hasNext(iterator) and ti <= 5400:
-                model.addLast(ruta,model.nextIterator(iterator))
-                if ruta['size'] >= 2:
-                    a = ruta['size']-1
-                    b = ruta['size']
-                    ti += model.getDuration(grf,model.getElement(ruta, a),model.getElement(ruta, b))
-            print(ruta['elements'])
-            print(ti)
-            print('::::::::::::::::::::::::')
-            if ti> 5400:
-                a = ruta['size']-1
-                b = ruta['size']
-                ti -= model.getDuration(grf,model.getElement(ruta, a),model.getElement(ruta, b))
-                model.deleteLast(ruta)
-            print(ruta['elements'])
-            print(ti)
-            model.addLast(rutas, ruta)
-
-    #bus = model.bfSearch(grf,'72')
-    #lst = bus['visited']['table']['elements']
-    #for el in lst:
-        #if el['key'] != None:
-            #print(el['key'])
-         #   iterator = model.newIterator(model.pathto(bus, el['key']))
-        #    while model.hasNext(iterator):
-       #         while model.hasNext(iterator) and ti <= t:
-      #          model.addLast(ruta, model.nextIterator(iterator))
-     #           if len(ruta) > 2:
-    #                ti += model.getDuration(citibike,ruta[len(ruta)-1],ruta[len(ruta)])
-        #print(el['key'])
-    #print(iterator)
-    #while model.hasNext(iterator):
-        #print(iterator['iterable_lst']['first']['info'])
-        #print(model.nextIterator(iterator))
 def VertexList(citibike):
     
     return model.VertexList(citibike)
