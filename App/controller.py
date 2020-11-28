@@ -125,9 +125,9 @@ def Top3(dct, MasUsada):
     else:
         Station=None
         min3={}
-        m1=0
-        m2=0
-        m3=0
+        m1=500000
+        m2=500000
+        m3=500000
         for i in dct:
             if dct[i]<m1:
                 Station=i
@@ -261,7 +261,7 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
     iterador=it.newIterator(lst)
     j=it.next(iterador)
     while it.hasNext(iterador):
-        x=tabla['table']['elements'][j]
+        x= model.getMap(tabla,j)
         if dT==None:
             dT=distancia(latT, longT, x[1], x[1])
             stationT=j
@@ -282,19 +282,27 @@ def RutaTuristica(citibike, tabla, latT, longT, latL, longL):
 
     search=  bfs.BreadhtFisrtSearch(citibike['stations'], stationT)
 
-    if bfs.hasPathTo(search, stationL):
-        ruta=bfs.pathTo(search, stationL)
+    #if bfs.hasPathTo(search, stationL):
+    #    ruta=bfs.pathTo(search, stationL)
+    ruta = caminoMasCorto(citibike['stations'],stationL,stationT)
     a=(stationTname, stationLname, ruta)
     return a
 # ___________________________________________________
 #  Funciones de impresion
 # ___________________________________________________
-def print4(Top3Entrada, Top3Salida, Top3MenosUsadas):
-    print('Las 3 estaciones a las que mas bicicletas llegan son ', Top3Entrada)
-    print('Las 3 estaciones de las que mas bicicletas salen son', Top3Salida)
-    print('Las 3 estaciones menos utilizadas son', Top3MenosUsadas)
+def print4(Top3Entrada, Top3Salida, Top3MenosUsadas, citibike):
+    print('Las 3 estaciones a las que mas bicicletas llegan son: ')
+    for i in Top3Entrada:
+        print(idToName(i,citibike)) 
+    print('Las 3 estaciones de las que mas bicicletas salen son: ')
+    for i in Top3Salida:
+        print(idToName(i,citibike))
+    print('Las 3 estaciones menos utilizadas son: ')
+    for i in Top3MenosUsadas:
+        if i != None:
+            print(idToName(i,citibike)) 
 
-def print5(citibike, rutas):
+def print5(citibike, rutas, citibikes):
     j = 0
     for ruta in rutas['elements']:
         j+=1
@@ -304,21 +312,29 @@ def print5(citibike, rutas):
             a = ruta['elements'][i]
             b = ruta['elements'][i+1]
             t = round(model.getDuration(citibike, a, b)/60,1)
+            a = idToName(ruta['elements'][i],citibikes)
+            b = idToName(ruta['elements'][i+1],citibikes)
             print(a,'--->',b, ' : ', t)
             i+=1
 
-def print6(lst):
+def print6(lst,citibike):
     iterator = model.newIterator(lst)
 
     while model.hasNext(iterator):
         segmento = model.nextIterator(iterator)
-        a = segmento['vertexA']
-        b = segmento['vertexB']
+        a = idToName(segmento['vertexA'],citibike)
+        b = idToName(segmento['vertexB'],citibike)
         t = round(segmento['weight']/60,1)
         print(a,'--->',b, ' : ', t)
 
-def print7(requerimiento):
-    print("La estacion mas cercana al turista es: ",requerimiento[0])
+def print7(requerimiento,citibike):
+    print("La estacion mas cercana al turista es: ", requerimiento[0])
     print("La estacion mas cercana al sitio a visitar es: ",requerimiento[1])
     print("La ruta a usar es: ",requerimiento[2])
     #print("El tiempo estimado de dicha ruta es",tiempo)
+
+def idToName(id, citibike):
+
+    lst = citibike['stations location']
+
+    return model.getMap(lst, id)[0]

@@ -76,13 +76,13 @@ def option4():
     Top3Entrada=controller.topEntrada(citibike)
     Top3Salida=controller.topSalida(citibike)
     Top3MenosUsadas=controller.MenosUsado(citibike)
-    controller.print4(Top3Entrada, Top3Salida, Top3MenosUsadas)
+    controller.print4(Top3Entrada, Top3Salida, Top3MenosUsadas, citibike)
 
 def option5():
     idStation = input('Ingrese el id de la estacion de inicio:\n')
     tmax = int(input('Ingrese el tiempo maximo que desea montar (en minutos):\n'))*60
     rutas = controller.rutaPorResistencia(citibike['stations'],idStation,tmax)
-    controller.print5(citibike['stations'],rutas)  
+    controller.print5(citibike['stations'],rutas,citibike)  
 
 def option6():
     anioNacimiento = int(input('Ingrese su año de nacimiento: \n'))
@@ -92,7 +92,7 @@ def option6():
     destination = controller.estacionMasUsada(citibike['endStationAge'],edad)
     print('Estacion final',destination)
     path = controller.caminoMasCorto(citibike['stations'],origin,destination)
-    controller.print6(path)
+    controller.print6(path,citibike)
 
 def option7():
     latT=input("Ingrese la latitud del turista: ")
@@ -101,8 +101,8 @@ def option7():
     longL=input("Ingrese la longitud del sitio a visitar: ")
     tabla=citibike['stations location']
     requerimiento=controller.RutaTuristica(citibike, tabla, latT, longT, latL, longL)
-    controller.print7(requerimiento)
-    
+    controller.print7(requerimiento,citibike)
+
 while True:
     printMenu()
     inputs = input('Seleccione una opcion\n')
